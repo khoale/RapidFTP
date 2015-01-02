@@ -1,0 +1,28 @@
+<virtualserver 0.0.0.0:40000>
+ServerNotes:"ftp-plain"
+VirtualPath: "/|%ROOTDIR%\ftp-plain\|RWCLADNS"
+</virtualserver>
+
+<virtualserver 0.0.0.0:40001>
+EnableSSLSupport:yes
+UseImplicitSSL:yes
+ForceSecureDataConn:yes
+ServerNotes:"ftp-implicit"
+VirtualPath: "/|%ROOTDIR%\ftp-implicit\|RWCLADNS"
+</virtualserver>
+
+<virtualserver 0.0.0.0:40002>
+EnableSSLSupport:yes
+LoginForceSSL:yes
+ForceSecureDataConn:yes
+ServerNotes:"ftp-explicit"
+VirtualPath: "/|%ROOTDIR%\ftp-explicit\|RWCLADNS"
+</virtualserver>
+
+<virtualserver 0.0.0.0:40003>
+ServerNotes:"sftp"
+VirtualPath: "/|%ROOTDIR%\sftp\|RWCLADNS"
+ServerProtocol:"SSH"
+ServerHostKeyName:"New Host Key"
+</virtualserver>
+

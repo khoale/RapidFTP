@@ -1,0 +1,28 @@
+<virtualserver 0.0.0.0:40000>
+
+<username "rapid">
+</username>
+
+</virtualserver>
+
+<virtualserver 0.0.0.0:40001>
+
+<username "rapid">
+</username>
+
+</virtualserver>
+
+<virtualserver 0.0.0.0:40002>
+
+<username "rapid">
+</username>
+
+</virtualserver>
+
+<virtualserver 0.0.0.0:40003>
+
+<username "rapid">
+</username>
+
+</virtualserver>
+
