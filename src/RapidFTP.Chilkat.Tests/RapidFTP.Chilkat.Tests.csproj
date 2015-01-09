@@ -53,6 +53,7 @@
       <HintPath>..\packages\chilkat-win32.9.5.0.46\lib\net40\ChilkatDotNet4.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -73,6 +74,11 @@
     <Compile Include="FtpClientTest.cs" />
     <Compile Include="Fixture\XlightFtpServer.cs" />
     <Compile Include="FtpServerTestProvider.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="SFtpBuildTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\FtpSettingBuilder.cs" />
@@ -95,11 +101,12 @@
       <Link>tools\xlight\ftpd.users</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\users\ChilkatLicense.ini">
-      <Link>ChilkatLicense.ini</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RapidFTP.Chilkat\RapidFTP.Chilkat.csproj">
@@ -118,6 +125,9 @@
     </Content>
     <Content Include="..\..\tools\xlight\xlight.exe">
       <Link>tools\xlight\xlight.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="license.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Samples\TextFile.txt">

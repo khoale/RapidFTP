@@ -56,7 +56,6 @@
     <Compile Include="IFtpClientFactory.cs" />
     <Compile Include="IFtpSettingProvider.cs" />
     <Compile Include="Utilities\FtpClientExtensions.cs" />
-    <Compile Include="Utilities\IniFile.cs" />
     <Compile Include="Models\FtpDirectoryItem.cs" />
     <Compile Include="Models\FtpFileItem.cs" />
     <Compile Include="IFtpClient.cs" />

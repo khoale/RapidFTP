@@ -9,7 +9,7 @@ Currently i only support this following freature
 - FTP protocol (Plain FTP, FTPS, FTPES)
 - SFTP protolcol
 - Download, Upload, List, Delete, Exist command
-- Integration test with Xlight server. (I also check with FileZilla server and it work without problem) 
+- Integration test with Xlight server. (It should work with FileZilla server too) 
     + Port 40000: PlainFTP
     + Port 40001: FTPS
     + Port 40002: FTPES
