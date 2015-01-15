@@ -1,6 +1,8 @@
 ﻿namespace RapidFTP.Utilities
 {
     using System;
+    using System.IO;
+    using System.Text.RegularExpressions;
 
     using RapidFTP.Models;
 
@@ -60,6 +62,32 @@
                 case ItemType.File:
                     ftpClient.DownloadFile(ftpItem.RemotePath, localPath);
                     break;
+            }
+        }
+
+        public static void DownloadDirectoryFileMatch(this IFtpClient ftpClient, string remoteFolder, string downloadFolder, Regex fileNameRegex, bool downloadSubDir = false)
+        {
+            if (!Directory.Exists(downloadFolder))
+            {
+                Directory.CreateDirectory(downloadFolder);
+            }
+
+            var ftpItems = ftpClient.ListItems(remoteFolder);
+            foreach (var ftpItem in ftpItems)
+            {
+                if (!ftpItem.IsDirectory() && fileNameRegex.Match(ftpItem.Name).Success)
+                {
+                    // Download file
+                    ftpItem.Download(Path.Combine(downloadFolder, ftpItem.Name));
+                }
+                else if (downloadSubDir && ftpItem.IsDirectory())
+                {
+                    if (ftpItem.Name != ".." && ftpItem.Name == ".")
+                    {
+                        ftpClient.DownloadDirectoryFileMatch(
+                            ftpItem.RemotePath, Path.Combine(downloadFolder, ftpItem.Name), fileNameRegex, true);
+                    }
+                }
             }
         }
     }

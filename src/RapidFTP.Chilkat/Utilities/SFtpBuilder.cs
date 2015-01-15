@@ -74,8 +74,7 @@
             }
 
             // Authenticate with the SSH server. Chilkat SFTP supports
-            // both password-based authenication as well as public-key
-            // authentication.  This example uses password authenication.
+            // both password-based authenication as well as public-key authentication.
             var success = this.sftp.AuthenticatePw(authentication.Username, authentication.Password);
             if (success != true)
             {

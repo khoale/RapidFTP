@@ -59,6 +59,11 @@
             this.client.Download(this, localPath);
         }
 
+        public bool IsDirectory()
+        {
+            return this.Type == ItemType.Directory;
+        }
+
         public bool Equals(FtpItem other)
         {
             if (ReferenceEquals(this, other))

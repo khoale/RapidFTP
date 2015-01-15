@@ -28,6 +28,19 @@
         }
 
         public FtpServerSetting(
+            string serverType,
+            string host,
+            int port,
+            FtpProtocol protocol,
+            FtpEncryption encryption,
+            TransferMode transferMode,
+            TimeSpan adjustTimeOffset,
+            bool verifySslCert) : this(host, port, protocol, encryption, transferMode, adjustTimeOffset, verifySslCert)
+        {
+            this.ServerType = serverType;
+        }
+
+        public FtpServerSetting(
             string host, 
             int port, 
             FtpProtocol protocol, 
@@ -40,6 +53,8 @@
         private FtpServerSetting()
         {
         }
+
+        public string ServerType { get; private set; }
 
         public string Host { get; private set; }
 
