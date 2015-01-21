@@ -64,8 +64,10 @@
                 // http://stackoverflow.com/questions/17490339/task-wait-and-continuewith
                 success = task.Wait(setting.ServerSetting.ConnectTimeout);
                 waitHandle.Set();
-
-                if (!success)
+                
+                // FtpClient can connect success but will disconnect right after
+                // so we must recheck the connection status right after that
+                if (!success || !ftpClient.IsConnected)
                 {
                     throw new InvalidOperationException(
                         string.Format("Fail to connect with ftp server.\nSetting:\n{0}", setting.Print()));

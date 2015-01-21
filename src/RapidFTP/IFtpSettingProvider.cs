@@ -4,6 +4,6 @@
 
     public interface IFtpSettingProvider
     {
-        FtpSetting GetSetting();
+        FtpSetting GetSetting(string profile);
     }
 }
