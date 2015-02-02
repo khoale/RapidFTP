@@ -80,6 +80,13 @@
 
         public FtpItem[] ListItems(string remoteDir)
         {
+            if (remoteDir == null)
+            {
+                throw new ArgumentNullException("remoteDir");
+            }
+
+            remoteDir = UnixPath.CorrectDirectorySeperator(remoteDir);
+
             lock (this.sync)
             {
                 this.ChangeRemoteDirectory(remoteDir);
@@ -142,6 +149,8 @@
                 throw new ArgumentException("remoteDirectory");
             }
 
+            remoteDirectory = UnixPath.CorrectDirectorySeperator(remoteDirectory);
+
             lock (this.sync)
             {
                 var relatedRemoteDirectoies = UnixPath.GetRelatedDirectories(remoteDirectory);
@@ -169,6 +178,8 @@
                 throw new ArgumentNullException("remoteFile");
             }
 
+            remoteFile = UnixPath.CorrectDirectorySeperator(remoteFile);
+
             lock (this.sync)
             {
                 var success = this.ftp2.DeleteRemoteFile(remoteFile);
@@ -186,6 +197,8 @@
             {
                 throw new ArgumentNullException("remoteDirectory");
             }
+
+            remoteDirectory = UnixPath.CorrectDirectorySeperator(remoteDirectory);
 
             if (!this.ExistDirectory(remoteDirectory))
             {
@@ -215,6 +228,8 @@
             {
                 throw new ArgumentNullException("remoteFile");
             }
+
+            remoteFile = UnixPath.CorrectDirectorySeperator(remoteFile);
 
             lock (this.sync)
             {
@@ -265,6 +280,8 @@
                 throw new ArgumentNullException("remoteDirectory");
             }
 
+            remoteDirectory = UnixPath.CorrectDirectorySeperator(remoteDirectory);
+
             lock (this.sync)
             {
                 return this.ftp2.ChangeRemoteDir(remoteDirectory);
@@ -282,6 +299,8 @@
             {
                 throw new ArgumentException("remoteFile");
             }
+
+            remoteFile = UnixPath.CorrectDirectorySeperator(remoteFile);
 
             if (!File.Exists(localFile))
             {
@@ -320,6 +339,8 @@
                 throw new ArgumentException("remoteDirectory");
             }
 
+            remoteDirectory = UnixPath.CorrectDirectorySeperator(remoteDirectory);
+
             if (!Directory.Exists(localDirectory))
             {
                 throw new DirectoryNotFoundException(
@@ -345,6 +366,18 @@
         /// <param name="localDirectory">The local directory</param>
         public void DownloadFolder(string remoteDirectory, string localDirectory)
         {
+            if (remoteDirectory == null)
+            {
+                throw new ArgumentNullException("remoteDirectory");
+            }
+
+            if (localDirectory == null)
+            {
+                throw new ArgumentNullException("localDirectory");
+            }
+
+            remoteDirectory = UnixPath.CorrectDirectorySeperator(remoteDirectory);
+
             lock (this.sync)
             {
                 this.ChangeRemoteDirectory(remoteDirectory);
@@ -360,6 +393,18 @@
 
         public void DownloadFile(string remoteFile, string localFile)
         {
+            if (remoteFile == null)
+            {
+                throw new ArgumentNullException("remoteFile");
+            }
+
+            if (localFile == null)
+            {
+                throw new ArgumentNullException("localFile");
+            }
+
+            remoteFile = UnixPath.CorrectDirectorySeperator(remoteFile);
+
             lock (this.sync)
             {
                 var success = this.ftp2.GetFile(remoteFile, localFile);

@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Data\FtpSettingData.cs" />
     <Compile Include="Data\MinimalFtpSettingData.cs" />
+    <Compile Include="Fixture\OneTimeFixture.cs" />
     <Compile Include="Fixture\UnlockComponentFixture.cs" />
     <Compile Include="FtpClientTest.cs" />
     <Compile Include="Fixture\XlightFtpServer.cs" />

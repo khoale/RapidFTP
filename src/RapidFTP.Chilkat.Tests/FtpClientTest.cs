@@ -14,9 +14,9 @@
     using Xunit;
     using Xunit.Extensions;
 
-    public class FtpClientTest : 
-        IUseFixture<UnlockComponentFixture>, 
-        IUseFixture<XlightFtpServer>,
+    public class FtpClientTest :
+        IUseFixture<OneTimeFixture<UnlockComponentFixture>>, 
+        IUseFixture<OneTimeFixture<XlightFtpServer>>,
         IDisposable
     {
         private readonly RapidFtpClient ftpClient;
@@ -186,16 +186,9 @@
         {
             this.ftpClient.Connect(ftpSetting);
 
-            this.ftpClient.DeleteDirectory("/Sample");
-            this.ftpClient.CreateDirectory("/Sample");
-            this.ftpClient.CreateDirectory("/Sample/Sample2");
-            this.ftpClient.CreateDirectory("/Sample/Sample3");
-
             var remoteFile1 = string.Format("/Sample/TextFile{0}.txt", Guid.NewGuid());
-            this.ftpClient.UploadFile("Samples/TextFile.txt", remoteFile1);
-
             var remoteFile2 = string.Format("/Sample/TextFile{0}.txt", Guid.NewGuid());
-            this.ftpClient.UploadFile("Samples/TextFile.txt", remoteFile2);
+            this.CreateSampleFolder(remoteFile1, remoteFile2);
 
             var sample2FtpItems = this.ftpClient.ListItems("/Sample/Sample2");
             var sampleFtpItems = this.ftpClient.ListItems("/Sample");
@@ -217,6 +210,25 @@
 
             Assert.Equal(4, sampleFtpItems.Length);
             Assert.Equal(0, sample2FtpItems.Length);
+
+            this.ftpClient.DeleteDirectory("/Sample");
+        }
+
+        [ClassData(typeof(MinimalFtpSettingData))]
+        [Theory]
+        public void ListItem_FileAndFolder_ShouldReleaseHandleAfterListFile(FtpSetting ftpSetting)
+        {
+            this.ftpClient.Connect(ftpSetting);
+
+            var remoteFile = string.Format("/Sample/TextFile{0}.txt", Guid.NewGuid());
+            this.CreateSampleFolder(remoteFile);
+            var ftpFileItems = this.ftpClient.ListFiles("/Sample");
+            Assert.NotEmpty(ftpFileItems);
+
+            foreach (var sampleFtpItem in ftpFileItems)
+            {
+                sampleFtpItem.Delete();
+            }
 
             this.ftpClient.DeleteDirectory("/Sample");
         }
@@ -314,17 +326,30 @@
             this.ftpClient.DeleteDirectory(remoteDirectory);
         }
 
-        public void SetFixture(UnlockComponentFixture data)
-        {
-        }
-
-        public void SetFixture(XlightFtpServer data)
-        {
-        }
-
         public void Dispose()
         {
             this.ftpClient.Dispose();
+        }
+
+        public void SetFixture(OneTimeFixture<UnlockComponentFixture> data)
+        {
+        }
+
+        public void SetFixture(OneTimeFixture<XlightFtpServer> data)
+        {
+        }
+
+        private void CreateSampleFolder(params string[] remoteFiles)
+        {
+            this.ftpClient.DeleteDirectory("/Sample");
+            this.ftpClient.CreateDirectory("/Sample");
+            this.ftpClient.CreateDirectory("/Sample/Sample2");
+            this.ftpClient.CreateDirectory("/Sample/Sample3");
+
+            foreach (var remoteFile in remoteFiles)
+            {
+                this.ftpClient.UploadFile("Samples/TextFile.txt", remoteFile);
+            }
         }
     }
 }

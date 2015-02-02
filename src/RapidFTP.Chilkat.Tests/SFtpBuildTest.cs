@@ -6,7 +6,7 @@
 
     using Xunit;
 
-    public class SFtpBuildTest : IUseFixture<UnlockComponentFixture>
+    public class SFtpBuildTest : IUseFixture<OneTimeFixture<UnlockComponentFixture>>
     {
         [Fact]
         public void Configure()
@@ -16,7 +16,7 @@
             Assert.NotNull(result);
         }
 
-        public void SetFixture(UnlockComponentFixture data)
+        public void SetFixture(OneTimeFixture<UnlockComponentFixture> data)
         {
         }
     }

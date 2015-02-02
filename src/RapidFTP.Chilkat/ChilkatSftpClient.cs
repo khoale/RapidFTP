@@ -147,13 +147,7 @@
                 string handle = null;
                 try
                 {
-                    handle = this.sftp.OpenDir(remoteDir);
-                    if (handle == null)
-                    {
-                        throw new InvalidOperationException(
-                            string.Format("Fail to open handle for directory {0}", remoteDir));
-                    }
-
+                    handle = this.OpenDirHandle(remoteDir);
                     var sftpDir = this.sftp.ReadDir(handle);
 
                     for (var i = 0; i < sftpDir.NumFilesAndDirs; i++)
@@ -161,7 +155,7 @@
                         var sftpFile = sftpDir.GetFileObject(i);
 
                         var isDirectory = sftpFile.IsDirectory;
-                        var remotePath = remoteDir + @"/" + sftpFile.Filename;
+                        var remotePath = UnixPath.Combine(remoteDir, sftpFile.Filename);
                         var name = sftpFile.Filename;
                         var size = sftpFile.Size32;
                         var createdTime = sftpFile.CreateTime;
@@ -233,6 +227,16 @@
 
         public void UploadFile(string localFile, string remoteFile)
         {
+            if (localFile == null)
+            {
+                throw new ArgumentNullException("localFile");
+            }
+
+            if (remoteFile == null)
+            {
+                throw new ArgumentNullException("remoteFile");
+            }
+
             lock (this.sync)
             {
                 // TODO: change to UploadFileByName
@@ -244,11 +248,7 @@
 
                 try
                 {
-                    handle = this.sftp.OpenFile(remoteFile, "writeOnly", "createTruncate");
-                    if (handle == null)
-                    {
-                        throw new InvalidOperationException("Fail to open file handle");
-                    }
+                    handle = this.OpenWriteFileHandle(remoteFile);
 
                     // Upload from the local file to the SSH server.
                     var success = this.sftp.UploadFile(handle, localFile);
@@ -270,6 +270,16 @@
 
         public void UploadDirectory(string localDirectory, string remoteDirectory)
         {
+            if (localDirectory == null)
+            {
+                throw new ArgumentNullException("localDirectory");
+            }
+
+            if (remoteDirectory == null)
+            {
+                throw new ArgumentNullException("remoteDirectory");
+            }
+
             lock (this.sync)
             {
                 var files = Directory.GetFiles(localDirectory);
@@ -283,6 +293,16 @@
 
         public void DownloadFolder(string remoteDirectory, string localDirectory)
         {
+            if (remoteDirectory == null)
+            {
+                throw new ArgumentNullException("remoteDirectory");
+            }
+
+            if (localDirectory == null)
+            {
+                throw new ArgumentNullException("localDirectory");
+            }
+
             lock (this.sync)
             {
                 var ftpFileItems = this.ListFiles(remoteDirectory);
@@ -296,6 +316,16 @@
 
         public void DownloadFile(string remoteFile, string localFile)
         {
+            if (remoteFile == null)
+            {
+                throw new ArgumentNullException("remoteFile");
+            }
+
+            if (localFile == null)
+            {
+                throw new ArgumentNullException("localFile");
+            }
+
             lock (this.sync)
             {
                 // Open a file on the server:
@@ -327,15 +357,49 @@
             }
         }
 
-        private string OpenReadFileHandle(string remotePath)
+        private string OpenDirHandle(string remoteDir)
         {
-            string handle = this.sftp.OpenFile(remotePath, "readOnly", "openExisting");
+            remoteDir = UnixPath.CorrectDirectorySeperator(remoteDir);
+            var handle = this.sftp.OpenDir(remoteDir);
             if (handle == null)
             {
-                throw new InvalidOperationException(string.Format("Fail to open handle for file {0}", remotePath));
+                throw new InvalidOperationException(
+                    string.Format("Fail to open handle for directory {0}", remoteDir));
             }
 
             return handle;
+        }
+
+        private string OpenFileHandle(string remoteFile, string access, string createDisp)
+        {
+            remoteFile = UnixPath.CorrectDirectorySeperator(remoteFile);
+            string handle = this.sftp.OpenFile(remoteFile, access, createDisp);
+            if (handle == null)
+            {
+                throw new InvalidOperationException(string.Format("Fail to open handle for file {0}", remoteFile));
+            }
+
+            return handle;
+        }
+
+        private string OpenReadFileHandle(string remoteFile)
+        {
+            if (remoteFile == null)
+            {
+                throw new ArgumentNullException("remoteFile");
+            }
+
+            return this.OpenFileHandle(remoteFile, "readOnly", "openExisting");
+        }
+
+        private string OpenWriteFileHandle(string remoteFile)
+        {
+            if (remoteFile == null)
+            {
+                throw new ArgumentNullException("remoteFile");
+            }
+
+            return this.OpenFileHandle(remoteFile, "writeOnly", "createTruncate");
         }
 
         private void CloseHandle(string handle)
